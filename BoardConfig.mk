@@ -160,8 +160,9 @@ TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 # flag to specify custom_bootimg.mk
 # BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_PATH)/custom_bootimg.mk
 
-# Hack: prevent anti rollback
-PLATFORM_SECURITY_PATCH := 2099-12-31
+# Security patch configuration
+# Android 16/OrangeFox owns PLATFORM_SECURITY_PATCH.
+# Keep vendor/boot patch levels tied to the platform value.
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 BOOT_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
 PLATFORM_VERSION := 99.87.36
