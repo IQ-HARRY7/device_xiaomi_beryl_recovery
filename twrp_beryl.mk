@@ -12,8 +12,6 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 # Inherit some common Twrp stuff.
 $(call inherit-product, vendor/twrp/config/common.mk)
 
-# Inherit OrangeFox/TWRP common configuration
-$(call inherit-product, vendor/twrp/config/common.mk)
 
 # Inherit from beryl device
 $(call inherit-product, device/xiaomi/beryl/device.mk)
