@@ -55,6 +55,10 @@ PRODUCT_PACKAGES += \
     android.hardware.boot@1.2-impl \
     libmtk_bsg
 
+# TWRP/OrangeFox theme
+# Keep this in the product makefile as well as BoardConfig.mk so OFOX 16 Soong bootstrap sees it.
+TW_THEME := portrait_hdpi
+
 # Recovery basics
 
 PRODUCT_PACKAGES += \
