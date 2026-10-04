@@ -50,3 +50,34 @@ The Redmi Note 14 5G / POCO M7 Pro 5G (codenamed _"beryl"_) is a mid-range smart
 Available at (https://github.com/IQ-HARRY7/device_xiaomi_beryl_recovery)
 
 ---
+---
+
+<h2 align="center">✨ Credits & Thanks</h2>
+
+<p align="center">
+  <i>This project wouldn't be where it is without the contributions, expertise, and encouragement of the people below.</i><br>
+  <i>Sincere thanks to everyone who played a part in making it happen.</i>
+</p>
+
+<br>
+
+- 🛠️ **Khargosxh18** — Device tree rebasing and adaptation
+- 🧭 **Darthjabba9** — Technical mentorship and project-wide support
+- 🤝 **Azzychy** — Valuable assistance and encouragement through the toughest phases
+- 🌳 **Specko** — Base tree contributions and technical direction
+- 🔧 **Eyad** — Ongoing project support, troubleshooting, and surviving Windows BS — bro is pro
+- 🚀 **!Cloud** — Base tree contributions, pull requests, and collaborative development
+- 🔐 **KoaaN** — Decryption support and V36 prebuilt assistance
+- 🧩 **Sharp shooter** — Device tree refinements and base tree modifications
+- 📦 **egaschnsk** — `vendor_boot` implementation references
+- 😭 **Aditya Prasad** — For absolutely no documented reason whatsoever (still not sure why bro is here 😐)
+- 🎊 And all Testers
+
+- Helps are not judged by placing (first-last) everybody helped & i appreciate all of them ♥️🎊
+<br>
+
+<p align="center">
+  <sub>❤️ Thanks to everyone who contributed, tested, advised, or simply helped along the way.</sub>
+</p>
+
+---
