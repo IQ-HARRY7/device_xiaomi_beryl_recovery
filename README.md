@@ -11,7 +11,7 @@ The Redmi Note 14 5G / POCO M7 Pro 5G (codenamed _"beryl"_) is a mid-range smart
 | GPU                            | IMG BXM-8-256                                                                              |
 | Memory                         | 6GB / 8GB RAM                                                                              |
 | Shipped OS                     | Android 14 (HyperOS)                                                                      |
-| Storage                        | 128GB / 256GB / 512GB                                                                     |
+| Storage                        | 128GB / 256GB                                                                     |
 | SIM                            | Nano-SIM + Nano-SIM                                                                       |
 | MicroSD                        | microSDXC                                                                                 |
 | Battery                        | Li-Po 5110 mAh (non-removable), 45W fast charging                                          |
@@ -29,6 +29,39 @@ The Redmi Note 14 5G / POCO M7 Pro 5G (codenamed _"beryl"_) is a mid-range smart
 
 ---
 
+## What's working & what's not working
+
+The recovery is currently functional for the major recovery and flashing operations. Most hardware and recovery features are working as expected, with only a few known limitations.
+
+| Feature | Status | Notes |
+| :-------------------------- | :----: | :-------------------------------------------------------------------------- |
+| Touchscreen                 |   ✅   | Touch input works correctly in OrangeFox.                                   |
+| Display                     |   ✅   | Display output and brightness are working normally.                        |
+| USB                         |   ✅   | USB connection works correctly in recovery.                                |
+| ADB                         |   ✅   | ADB connection is functional and can be used from a computer.              |
+| Fastboot/FastbootD                   |   ✅   | FastbootD/bootloader functionality works as expected.                       |
+| Internal Storage            |   ✅   | Internal storage can be accessed normally from recovery.                   |
+| MicroSD                     |   ✅   | microSD storage is detected and accessible.                                |
+| Decryption                  |   ✅   | Device storage decryption is working.                                      |
+| Backup & Restore             |   ✅   | Recovery backup and restore operations are functional.                     |
+| Flashing ZIPs               |   ✅   | ROMs, Magisk, patches, and other flashable ZIPs can be flashed.            |                             |
+| Mounting Partitions         |   ✅   | Supported partitions can be mounted correctly.                             |
+| Reboot Options              |   ✅   | Rebooting to System, Recovery, and Bootloader works as expected.           |
+| Vibration                   |   ❌   | Vibration/haptic feedback is currently not working in recovery.            |
+| Flashlight                  |   ❌   | The flashlight/torch function is currently not working in recovery.        |
+| SELinux                     |   ⚠️   | SELinux is currently running in **Permissive** mode.                       |
+
+### Known limitations
+
+- ❌ **Vibration:** Haptic/vibration feedback is currently unavailable in OrangeFox.
+- ❌ **Flashlight:** The flashlight/torch functionality is currently unavailable.
+- ⚠️ **SELinux:** The recovery currently runs with SELinux in **Permissive** mode rather than Enforcing.
+
+> **Note:** Apart from the limitations listed above, the recovery is considered functional for normal recovery, flashing, backup, restore, wiping, and related operations.
+
+---
+
+---
 # Flashing
 ## Flashing with an installed custom recovery (OrangeFox/TWRP/PBRP/etc.):
     * Download the OrangeFox zip installer file
