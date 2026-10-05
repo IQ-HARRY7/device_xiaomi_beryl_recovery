@@ -22,14 +22,21 @@ on init
     copy /vendor/lib64/libsoft_attestation_cert.so /system/lib64/libsoft_attestation_cert.so
 
 on early-fs
+    rm /system/etc/vintf/manifest/android.hardware.boot-service.mtk.xml
+    rm /system/etc/vintf/manifest/android.hardware.health-service.example.xml
+    mkdir /tmp/misc 0771 system system
+    mkdir /tmp/misc/keystore 0700 keystore keystore
     symlink /dev/block/platform/soc/112b0000.ufshci /dev/block/platform/bootdevice
     symlink /dev/block/platform/soc/112b0000.ufshci /dev/block/bootdevice
     symlink /dev/block/platform/soc/112b0000.ufshci/by-name /dev/block/bootdevice/by-name
     symlink /dev/block/platform/soc/112b0000.ufshci/by-name /dev/block/by-name
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
-    start vold
     start servicemanager
     start hwservicemanager
+    start tee-supplicant
+    start vendor.keymint-mitee
+    start keystore2
+    start vold
 
 on fs
     setprop sys.usb.config adb
@@ -60,6 +67,7 @@ on fs
 
     setprop vendor.teefs_state ready
     setprop ro.hardware.gatekeeper mitee
+    start vendor.gatekeeper_mitee
 
 on post-fs
     mkdir /dev/usb-ffs 0775 shell shell
