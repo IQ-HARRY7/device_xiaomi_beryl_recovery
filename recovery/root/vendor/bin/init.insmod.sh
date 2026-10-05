@@ -1,4 +1,4 @@
-#!/vendor/bin/sh
+#!/system/bin/sh
 
 ########################################################
 ### init.insmod.cfg format:                          ###
