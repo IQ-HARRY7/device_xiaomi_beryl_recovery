@@ -230,7 +230,7 @@ TW_BRIGHTNESS_PATH := "/sys/class/leds/lcd-backlight/brightness"
 
 # Battery & CPU Temp
 TW_CUSTOM_BATTERY_PATH := "/sys/class/power_supply/battery"
-TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone9/temp"
+TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone1/temp"
 
 # Haptics
 TW_NO_HAPTICS := false
