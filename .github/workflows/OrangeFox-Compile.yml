@@ -30,6 +30,7 @@ on:
         - main
         - master
         - fox_14.1
+        - test
       DEVICE_PATH:
         description: 'Specify your Device Path'
         required: true
