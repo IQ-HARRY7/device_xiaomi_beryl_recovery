@@ -67,7 +67,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export FOX_INSTALLER_DISABLE_AUTOREBOOT=1
 
     # save OrangeFox configuration to persist - to save OrangeFox settings accessible after wipe/format.
-    export FOX_SETTINGS_ROOT_DIRECTORY=/persist/OFRP
+    export FOX_SETTINGS_ROOT_DIRECTORY=/mnt/vendor/persist/OFRP
 
     # to reduce Orangefox size
     export FOX_DRASTIC_SIZE_REDUCTION=1
