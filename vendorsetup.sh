@@ -73,7 +73,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export FOX_DRASTIC_SIZE_REDUCTION=1
 
     # KernelSU-Next / SukiSu support
-    export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=0
+    export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1
     export FOX_ENABLE_SUKISU_SUPPORT=1
     
     # to fix CANNOT LINK EXECUTIVES & Keystore2 related issues in "Android 16" (ONLY!)
