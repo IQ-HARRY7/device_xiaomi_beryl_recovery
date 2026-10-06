@@ -16,6 +16,11 @@ odm_dlkm                                                /odm_dlkm              e
 system_dlkm                                             /system_dlkm           erofs   ro                                                                           wait,slotselect,avb,logical,first_stage_mount
 system_dlkm                                             /system_dlkm           ext4    ro                                                                           wait,slotselect,avb,logical,first_stage_mount
 
+# persist
+/persist                   ext4       /dev/block/by-name/persist        flags=backup=1;display="Persist";wipeingui=0;symlink=/mnt/vendor/persist
+
+/prodpersist               ext4       /dev/block/by-name/prodpersist    flags=backup=1;display="ProdPersist";wipeingui=0;symlink=/mnt/product/persist
+
 # Metadata
 /dev/block/by-name/metadata                             /metadata              ext4    noatime,nosuid,nodev,discard                                                 wait,check,formattable,wrappedkey,first_stage_mount,disable_verification
 
