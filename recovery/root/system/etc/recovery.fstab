@@ -19,8 +19,6 @@ system_dlkm                                             /system_dlkm           e
 # persist
 /persist                   ext4       /dev/block/by-name/persist        flags=backup=1;display="Persist";wipeingui=0;symlink=/mnt/vendor/persist
 
-/prodpersist               ext4       /dev/block/by-name/prodpersist    flags=backup=1;display="ProdPersist";wipeingui=0;symlink=/mnt/product/persist
-
 # Metadata
 /dev/block/by-name/metadata                             /metadata              ext4    noatime,nosuid,nodev,discard                                                 wait,check,formattable,wrappedkey,first_stage_mount,disable_verification
 
