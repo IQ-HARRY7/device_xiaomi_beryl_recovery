@@ -43,7 +43,8 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
     export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
 
-    # export FOX_USE_DATA_RECOVERY_FOR_SETTINGS=1
+    # Set Home directory as data/recovery/Fox ~
+    export FOX_USE_DATA_RECOVERY_FOR_SETTINGS=1
     export FOX_USE_UPDATED_MAGISKBOOT=1
     export FOX_COMPRESS_EXECUTABLES=1
 
