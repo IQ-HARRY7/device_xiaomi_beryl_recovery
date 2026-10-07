@@ -32,9 +32,7 @@ fi
 if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
 
     export LC_ALL="C"
-    export ALLOW_MISSING_DEPENDENCIES=true
-    export BUILD_USERNAME=🔥IQ_HARRY_07🔥
-    export BUILD_HOSTNAME=github
+    export ALLOW_MISSING_DEPENDENCIES=true  
 
     export FOX_VENDOR_BOOT_RECOVERY=1
     export FOX_VANILLA_BUILD=1
@@ -45,6 +43,7 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     export FOX_RECOVERY_SYSTEM_PARTITION="/dev/block/mapper/system"
     export FOX_RECOVERY_VENDOR_PARTITION="/dev/block/mapper/vendor"
 
+    # Set Home directory as data/recovery/Fox ~
     export FOX_USE_DATA_RECOVERY_FOR_SETTINGS=1
     export FOX_USE_UPDATED_MAGISKBOOT=1
     export FOX_COMPRESS_EXECUTABLES=1
@@ -68,14 +67,17 @@ if [ "$1" = "$FDEVICE" -o "$FOX_BUILD_DEVICE" = "$FDEVICE" ]; then
     # prevent automated reboot when flashing Orangefox.zip
     export FOX_INSTALLER_DISABLE_AUTOREBOOT=1
 
+    # save OrangeFox configuration to persist - to save OrangeFox settings accessible after wipe/format.
+    #  export FOX_SETTINGS_ROOT_DIRECTORY=/persist/OFRP
+    # Get a life - touch grass
+
     # to reduce Orangefox size
     export FOX_DRASTIC_SIZE_REDUCTION=1
 
     # KernelSU-Next / SukiSu support
-    export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=0
-    # export FOX_ENABLE_SUKISU_SUPPORT=1
-    #Temporary disabled.
-
+    export FOX_ENABLE_KERNELSU_NEXT_SUPPORT=1
+    export FOX_ENABLE_SUKISU_SUPPORT=1
+    
     # to fix CANNOT LINK EXECUTIVES & Keystore2 related issues in "Android 16" (ONLY!)
     export FOX_ADD_API_V36_PREBUILTS=2
 

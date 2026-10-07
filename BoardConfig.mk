@@ -216,7 +216,6 @@ TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
 
 # Vendor_Boot
-BOARD_USES_RECOVERY_AS_BOOT :=
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
@@ -240,5 +239,10 @@ OF_FLASHLIGHT_ENABLE := 1
 OF_FL_PATH1 := /tmp/flashlight
 
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
+
 TW_LOAD_VENDOR_MODULES := "fts_touch_i2c.ko lct_tp.ko xiaomi_tp.ko xiaomi_fp.ko adsp.ko nfc_i2c.ko mtk_battery_manager.ko mt6375-battery.ko auth_battery.ko charger_class.ko mtk_charger_framework.ko regulator-vibrator.ko flashlight.ko lm3644.ko"
+
 TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
+
+# use this flag else you will get BlueFox
+TARGET_RECOVERY_PIXEL_FORMAT := RGBX_8888
