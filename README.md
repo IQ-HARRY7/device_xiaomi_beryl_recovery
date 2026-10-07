@@ -102,6 +102,7 @@ Available at (https://github.com/IQ-HARRY7/device_xiaomi_beryl_recovery)
 - 🧩 **Sharp shooter** — Device tree refinements and base tree modifications
 - 📦 **egaschnsk** — `vendor_boot` implementation references
 - 😭 **Aditya Prasad** — For absolutely no documented reason whatsoever (still not sure why bro is here 😐)
+- ✨ **Sairaj** - For testing,help & support with Building 
 - 🎊 And all Testers
 
 - Helps are not judged by placing (first-last) everybody helped & i appreciate all of them ♥️🎊
