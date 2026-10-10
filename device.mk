@@ -8,26 +8,21 @@
 LOCAL_PATH := device/xiaomi/beryl
 
 # Configure Virtual A/B
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
-
-# Virtual A/B OTA configuration
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
 # Enable developer GSI keys
-$(call inherit-product, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
 
-# Configure generic_ramdidk.mk
-$(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
+# Configure generic ramdisk
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
 
 # Hidl Service
- PRODUCT_ENFORCE_VINTF_MANIFEST := true
+PRODUCT_ENFORCE_VINTF_MANIFEST := true
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += $(DEVICE_PATH)
-
-# PBRP fix 
-PRODUCT_VENDOR_PROPERTIES += ro.virtual_ab.compression.xor.enabled=true
 
 
 # Dynamic
