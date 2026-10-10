@@ -116,12 +116,10 @@ BOARD_SUPER_PARTITION_GROUPS := xiaomi_dynamic_partitions
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := \
     system \
     system_ext \
-    system_dlkm \
     vendor \
     vendor_dlkm \
     product \
-    odm_dlkm \
-    mi_ext
+    odm_dlkm
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9116319744
 
 # Workaround for error copying vendor files to recovery ramdisk
