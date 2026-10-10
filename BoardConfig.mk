@@ -14,7 +14,6 @@ BUILD_BROKEN_ELF_PREBUILT_PRODUCT_COPY_FILES := true
 BUILD_BROKEN_PREBUILT_ELF_FILES := true
 BUILD_BROKEN_MISSING_REQUIRED_MODULES := true
 SOONG_ALLOW_MISSING_DEPENDENCIES := true
--include bootable/recovery/orangefox_soong.mk
 
 # Architecture
 TARGET_ARCH := arm64
@@ -234,9 +233,15 @@ TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone1/temp"
 # Haptics
 TW_NO_HAPTICS := false
 
-# Flashlight
-OF_FLASHLIGHT_ENABLE := 1
-OF_FL_PATH1 := /tmp/flashlight
+# Flashlight / Torch
+PB_TORCH_PATH := "/sys/class/leds/flashlight"
+PB_TORCH_MAX_BRIGHTNESS := 1
+
+# PitchBlack Recovery Project (PBRP) Configuration
+PB_DISABLE_DEFAULT_DM_VERITY := true
+PB_DISABLE_DEFAULT_TREBLE_COMP := true
+
+TW_DEVICE_VERSION := beryl | 🔥IQ_HARRY_07🔥
 
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
 

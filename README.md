@@ -1,4 +1,4 @@
-## OrangeFox Recovery device tree for the Redmi Note 14 5G / POCO M7 Pro 5G (Beryl)
+## PitchBlack Recovery Project (PBRP) device tree for Redmi Note 14 5G / POCO M7 Pro 5G (Beryl)
 
 The Redmi Note 14 5G / POCO M7 Pro 5G (codenamed _"beryl"_) is a mid-range smartphone from Xiaomi/POCO.
 
