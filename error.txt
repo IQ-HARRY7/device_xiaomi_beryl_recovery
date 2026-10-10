@@ -1,0 +1,12 @@
+Run SOURCE_DIR="${GITHUB_WORKSPACE}/PBRP/pbrp_android-12.1"
+including vendor/pb/vendorsetup.sh
+including vendor/utils/vendorsetup.sh
+  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+                                 Dload  Upload   Total   Spent    Left  Speed
+
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
+100 13632  100 13632    0     0  51004      0 --:--:-- --:--:-- --:--:-- 50865
+build/make/core/config.mk:729: error: BOARD_SYSTEMSDK_VERSIONS (32) must all be greater than or equal to PRODUCT_SHIPPING_API_LEVEL (34).
+16:06:10 dumpvars failed with: exit status 1
+Error: Process completed with exit code 1.

@@ -1,5 +1,5 @@
-# Copyright (C) 2025-2026 The OrangeFox Recovery Project
-# SPDX-License-Identifier: GPL-3.0-or-later
+# Copyright (C) 2026 PitchBlack Recovery Project
+# SPDX-License-Identifier: Apache-2.0
 #
 # Custom boot/vendor_boot rules for beryl.
 # Keeps default boot image behavior (AVB enabled) and replaces vendor_boot with
