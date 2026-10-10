@@ -12,7 +12,7 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_ven
 
 # Virtual A/B OTA configuration
 $(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
-$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression_with_xor.mk)
+$(call inherit-product, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
 
 # Enable developer GSI keys
 $(call inherit-product, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
@@ -25,6 +25,10 @@ $(call inherit-product, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
 
 # Soong namespaces
 PRODUCT_SOONG_NAMESPACES += $(DEVICE_PATH)
+
+# PBRP fix 
+PRODUCT_VENDOR_PROPERTIES += ro.virtual_ab.compression.xor.enabled=true
+
 
 # Dynamic
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
@@ -146,8 +150,5 @@ PRODUCT_COPY_FILES += \
     system/timezone/output_data/iana/tzdata:$(TARGET_COPY_OUT_RECOVERY)/root/system/usr/share/zoneinfo/tzdata
 
 
-# honestly! fuck this vintf 9.0 issue!!!
-# trying to get rid of from the manifest version 9.0  issue - stop this file from being generated
- PRODUCT_REMOVE_PACKAGES += android.hardware.health-service.example
-# 
+
 
