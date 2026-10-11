@@ -52,14 +52,20 @@ $(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_
 	else \
 		cp -f "$(recovery_uncompressed_ramdisk)" "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk_recovery.cpio"; \
 	fi
-	@cd "$(VENDOR_BOOT_PATCH_DIR)" && "$(MAGISKBOOT)" repack stock.img new_vendor_boot.img
+	@if [ -f "$(VENDOR_BOOT_PATCH_DIR)/bootconfig" ]; then \
+		grep -q "androidboot.selinux=permissive" "$(VENDOR_BOOT_PATCH_DIR)/bootconfig" || \
+		echo "androidboot.selinux=permissive" >> "$(VENDOR_BOOT_PATCH_DIR)/bootconfig"; \
+	fi
+	@cd "$(VENDOR_BOOT_PATCH_DIR)" && PATCHVBMETAFLAG=true "$(MAGISKBOOT)" repack stock.img new_vendor_boot.img
 	@cp -f "$(VENDOR_BOOT_PATCH_DIR)/new_vendor_boot.img" "$@"
 	$(call assert-max-image-size,$@,$(BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE))
 	$(AVBTOOL) erase_footer --image $@ >/dev/null 2>&1 || true
 	$(AVBTOOL) add_hash_footer \
 		--image $@ \
 		--partition_size $(BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE) \
-		--partition_name vendor_boot $(INTERNAL_AVB_VENDOR_BOOT_SIGNING_ARGS) \
+		--partition_name vendor_boot \
+		--flags 3 \
+		$(INTERNAL_AVB_VENDOR_BOOT_SIGNING_ARGS) \
 		$(BOARD_AVB_VENDOR_BOOT_ADD_HASH_FOOTER_ARGS)
 
 endif

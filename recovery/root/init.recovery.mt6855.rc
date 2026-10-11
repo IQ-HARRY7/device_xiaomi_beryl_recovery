@@ -4,7 +4,7 @@ import /miteelog.rc
 
 # Set SELinux to permissive 
 on early-init
-    wait /sys/fs/selinux/enforce
+    wait /sys/fs/selinux/enforce 1
     write /sys/fs/selinux/enforce 0
 
 on init
@@ -31,12 +31,6 @@ on early-fs
     symlink /dev/block/platform/soc/112b0000.ufshci/by-name /dev/block/bootdevice/by-name
     symlink /dev/block/platform/soc/112b0000.ufshci/by-name /dev/block/by-name
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
-    start servicemanager
-    start hwservicemanager
-    start tee-supplicant
-    start vendor.keymint-mitee
-    start keystore2
-    start vold
 
 on fs
     setprop sys.usb.config adb
@@ -52,12 +46,12 @@ on fs
     mkdir /mnt/vendor/nvcfg 0771 system system
     mkdir /mnt/vendor/persist 0755 root root
 
-    wait /dev/block/by-name/protect1 3
-    mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f noatime nosuid nodev wait
-    mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s noatime nosuid nodev wait
-    mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata noatime nosuid nodev wait
-    mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg noatime nosuid nodev wait
-    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist noatime nosuid nodev wait
+    wait /dev/block/by-name/protect1 1
+    mount ext4 /dev/block/by-name/protect1 /mnt/vendor/protect_f noatime nosuid nodev
+    mount ext4 /dev/block/by-name/protect2 /mnt/vendor/protect_s noatime nosuid nodev
+    mount ext4 /dev/block/by-name/nvdata /mnt/vendor/nvdata noatime nosuid nodev
+    mount ext4 /dev/block/by-name/nvcfg /mnt/vendor/nvcfg noatime nosuid nodev
+    mount ext4 /dev/block/by-name/persist /mnt/vendor/persist noatime nosuid nodev
 
     restorecon_recursive /metadata
     restorecon_recursive /mnt/vendor/persist
@@ -70,29 +64,6 @@ on fs
     start vendor.gatekeeper_mitee
 
 on post-fs
-    mkdir /dev/usb-ffs 0775 shell shell
-    mkdir /dev/usb-ffs/adb 0770 shell shell
-    mkdir /config/usb_gadget/g1 0770 shell shell
-    write /config/usb_gadget/g1/idVendor 0x18D1
-    write /config/usb_gadget/g1/bcdDevice 0x0223
-    write /config/usb_gadget/g1/bcdUSB 0x0200
-    write /config/usb_gadget/g1/os_desc/use 1
-    mkdir /config/usb_gadget/g1/strings/0x409 0770
-    write /config/usb_gadget/g1/strings/0x409/serialnumber ${ro.serialno}
-    write /config/usb_gadget/g1/strings/0x409/manufacturer ${ro.product.manufacturer}
-    write /config/usb_gadget/g1/strings/0x409/product ${ro.product.model}
-    mkdir /config/usb_gadget/g1/functions/ffs.adb
-    mkdir /config/usb_gadget/g1/functions/ffs.mtp
-    write /config/usb_gadget/g1/functions/ffs.mtp/os_desc/interface.MTP/compatible_id "MTP"
-    mkdir /config/usb_gadget/g1/configs/b.1 0770 shell shell
-    mkdir /config/usb_gadget/g1/configs/b.1/strings/0x409 0770 shell shell
-    write /config/usb_gadget/g1/os_desc/b_vendor_code 0x1
-    write /config/usb_gadget/g1/os_desc/qw_sign "MSFT100"
-    write /config/usb_gadget/g1/configs/b.1/MaxPower 500
-    symlink /config/usb_gadget/g1/configs/b.1 /config/usb_gadget/g1/os_desc/b.1
-    mount functionfs adb /dev/usb-ffs/adb rmode=0770,fmode=0660,uid=2000,gid=2000,no_disconnect=1
-    mkdir /dev/usb-ffs/mtp 0775 system system
-    mount functionfs mtp /dev/usb-ffs/mtp rmode=0775,fmode=0666,uid=1024,gid=1024,no_disconnect=1
     exec_background - system log -- /system/bin/recovery-refresh
     exec u:r:update_engine:s0 root root -- /system/bin/mtk_plpath_utils
     start mtk.plpath.utils.link
@@ -234,15 +205,6 @@ on property:sys.usb.config=none && property:sys.usb.configfs=1
 on property:sys.usb.config=adb && property:sys.usb.configfs=1
     start adbd
 
-on property:sys.usb.ffs.ready=1 && property:sys.usb.config=adb && property:sys.usb.configfs=1
-    write /config/usb_gadget/g1/UDC "none"
-    write /config/usb_gadget/g1/configs/b.1/strings/0x409/configuration "adb"
-    rm /config/usb_gadget/g1/configs/b.1/f1
-    rm /config/usb_gadget/g1/configs/b.1/f2
-    write /config/usb_gadget/g1/idProduct 0xD001
-    symlink /config/usb_gadget/g1/functions/ffs.adb /config/usb_gadget/g1/configs/b.1/f1
-    write /config/usb_gadget/g1/UDC ${sys.usb.controller}
-    setprop sys.usb.state ${sys.usb.config}
 
 on property:sys.usb.config=mtp && property:sys.usb.ffs.mtp.ready=1 && property:sys.usb.configfs=1
     write /config/usb_gadget/g1/UDC "none"
