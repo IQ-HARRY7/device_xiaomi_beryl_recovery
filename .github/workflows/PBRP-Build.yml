@@ -25,13 +25,13 @@ on:
       DEVICE_TREE_BRANCH:
         description: 'Device Tree Branch'
         required: true
-        default: 'PBRP'
+        default: 'fox_14.1'
         type: choice
         options:
-        - main
-        - master
         - fox_14.1
         - PBRP
+        - master
+        - main
       DEVICE_PATH:
         description: 'Device tree path inside the source tree'
         required: true
