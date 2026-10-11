@@ -37,10 +37,16 @@ ifeq ($(MAGISKBOOT),)
     endif
 endif
 
-$(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_BOOT_STOCK) $(AVBTOOL)
+$(recovery_uncompressed_ramdisk): recovery
+
+$(INSTALLED_VENDOR_BOOTIMAGE_TARGET): recovery $(recovery_uncompressed_ramdisk) $(VENDOR_BOOT_STOCK) $(AVBTOOL)
 	$(call pretty,"Target vendor_boot image: $@ (patched stock)")
 	@if [ ! -f "$(VENDOR_BOOT_STOCK)" ]; then \
 		echo "error: missing stock vendor_boot at $(VENDOR_BOOT_STOCK)"; \
+		exit 1; \
+	fi
+	@if [ ! -f "$(TARGET_RECOVERY_ROOT_OUT)/system/bin/recovery" ]; then \
+		echo "error: $(TARGET_RECOVERY_ROOT_OUT)/system/bin/recovery is missing! Recovery binary was not built."; \
 		exit 1; \
 	fi
 	@rm -rf "$(VENDOR_BOOT_PATCH_DIR)"
@@ -52,6 +58,7 @@ $(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_
 	else \
 		cp -f "$(recovery_uncompressed_ramdisk)" "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk_recovery.cpio"; \
 	fi
+	@cp -f "$(recovery_uncompressed_ramdisk)" "$(PRODUCT_OUT)/vendor_ramdisk_recovery.cpio"
 	@if [ -f "$(VENDOR_BOOT_PATCH_DIR)/bootconfig" ]; then \
 		grep -q "androidboot.selinux=permissive" "$(VENDOR_BOOT_PATCH_DIR)/bootconfig" || \
 		echo "androidboot.selinux=permissive" >> "$(VENDOR_BOOT_PATCH_DIR)/bootconfig"; \
