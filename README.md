@@ -35,7 +35,7 @@ The recovery is currently functional for the major recovery and flashing operati
 
 | Feature | Status | Notes |
 | :-------------------------- | :----: | :-------------------------------------------------------------------------- |
-| Touchscreen                 |   ✅   | Touch input works correctly in OrangeFox.                                   |
+| Touchscreen                 |   ✅   | Touch input works correctly in PBRP.                                        |
 | Display                     |   ✅   | Display output and brightness are working normally.                        |
 | USB                         |   ✅   | USB connection works correctly in recovery.                                |
 | ADB                         |   ✅   | ADB connection is functional and can be used from a computer.              |
@@ -61,19 +61,19 @@ The recovery is currently functional for the major recovery and flashing operati
 
 ---
 # Flashing
-## Flashing with an installed custom recovery (OrangeFox/TWRP/PBRP/etc.):
-    * Download the OrangeFox zip installer file
+## Flashing with an installed custom recovery (PBRP/OrangeFox/TWRP):
+    * Download the PBRP zip installer file
     * Reboot your device to your custom recovery
-    * Flash the OrangeFox zip installer
-    * Reboot to OrangeFox after flashing
+    * Flash the PBRP zip installer
+    * Reboot to PBRP after flashing
 
 ## Flashing with Fastboot - only if there is no installed custom recovery:
-    * Download the OrangeFox recovery image
+    * Download the PBRP recovery image
     * Reboot your device to bootloader/fastboot mode
-    * Flash or boot the OrangeFox recovery image according to the device's partition layout
+    * Flash or boot the PBRP recovery image according to the device's partition layout
     * Reboot to recovery
         * Reboot to System and configure the Android ROM
-    * Reboot to OrangeFox and flash the OrangeFox zip installer if required
+    * Reboot to PBRP and flash the PBRP zip installer if required
 
 ---
 

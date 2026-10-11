@@ -236,6 +236,7 @@ PB_TORCH_PATH := "/sys/class/leds/flashlight"
 PB_TORCH_MAX_BRIGHTNESS := 1
 
 # PitchBlack Recovery Project (PBRP) Configuration
+PB_DEVICE_RATIO := "20:9"
 PB_DISABLE_DEFAULT_DM_VERITY := true
 PB_DISABLE_DEFAULT_TREBLE_COMP := true
 MAINTAINER := "🔥IQ_HARRY_07🔥"
