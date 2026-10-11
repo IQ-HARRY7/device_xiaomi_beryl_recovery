@@ -12,9 +12,10 @@ on:
       MANIFEST_BRANCH:
         description: 'Pitch Black Recovery manifest branch'
         required: true
-        default: 'android-12.1'
+        default: 'android-14.0'
         type: choice
         options:
+          - android-14.0
           - android-12.1
       DEVICE_TREE:
         description: 'Beryl device-tree repository'

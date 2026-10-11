@@ -9,6 +9,7 @@ LOCAL_PATH := device/xiaomi/beryl
 
 # Configure Virtual A/B
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression_with_xor.mk)
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
@@ -29,8 +30,11 @@ PRODUCT_SOONG_NAMESPACES += $(DEVICE_PATH)
 PRODUCT_USE_DYNAMIC_PARTITIONS := true
 PRODUCT_BUILD_SUPER_PARTITION  := false
 
-# API (compatible with Android 12.1 build tree)
-PRODUCT_SHIPPING_API_LEVEL := 32
+# API
+PRODUCT_SHIPPING_API_LEVEL := 34
+PRODUCT_TARGET_VNDK_VERSION := 34
+BOARD_SHIPPING_API_LEVEL := 34
+SHIPPING_API_LEVEL := 34
 
 BOARD_ROOT_EXTRA_SYMLINKS += \
     /vendor/firmware:/vendor/odm/firmware
