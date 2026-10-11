@@ -58,6 +58,8 @@ PRODUCT_PACKAGES += \
 # Recovery basics
 
 PRODUCT_PACKAGES += \
+    recovery \
+    init \
     vold.recovery \
     vold_prepare_subdirs.recovery \
     wait_for_keymaster.recovery

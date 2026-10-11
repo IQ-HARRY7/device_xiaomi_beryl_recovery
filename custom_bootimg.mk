@@ -21,9 +21,17 @@ endif
 ifdef BUILDING_VENDOR_BOOT_IMAGE
 VENDOR_BOOT_STOCK ?= $(DEVICE_PATH)/prebuilt/vendor_boot.img
 VENDOR_BOOT_PATCH_DIR := $(PRODUCT_OUT)/vendor_boot_patch
-FOX_MAGISKBOOT ?= $(PWD)/vendor/recovery/tools/magiskboot
 
-$(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_BOOT_STOCK) $(FOX_MAGISKBOOT) $(AVBTOOL)
+# Detect magiskboot binary across OrangeFox, PBRP/TWRP, or PATH
+MAGISKBOOT ?= $(PWD)/vendor/recovery/tools/magiskboot
+ifeq ($(wildcard $(MAGISKBOOT)),)
+    MAGISKBOOT := $(PWD)/external/magisk-prebuilt/prebuilt/magiskboot_x86
+    ifeq ($(wildcard $(MAGISKBOOT)),)
+        MAGISKBOOT := magiskboot
+    endif
+endif
+
+$(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_BOOT_STOCK) $(AVBTOOL)
 	$(call pretty,"Target vendor_boot image: $@ (patched stock)")
 	@if [ ! -f "$(VENDOR_BOOT_STOCK)" ]; then \
 		echo "error: missing stock vendor_boot at $(VENDOR_BOOT_STOCK)"; \
@@ -32,13 +40,17 @@ $(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_
 	@rm -rf "$(VENDOR_BOOT_PATCH_DIR)"
 	@mkdir -p "$(VENDOR_BOOT_PATCH_DIR)"
 	@cp -f "$(VENDOR_BOOT_STOCK)" "$(VENDOR_BOOT_PATCH_DIR)/stock.img"
-	@cd "$(VENDOR_BOOT_PATCH_DIR)" && "$(FOX_MAGISKBOOT)" unpack -n stock.img
+	@cd "$(VENDOR_BOOT_PATCH_DIR)" && "$(MAGISKBOOT)" unpack -n stock.img
+	@if [ -f "$(VENDOR_BOOT_PATCH_DIR)/bootconfig" ]; then \
+		sed -i 's/androidboot.selinux=enforcing/androidboot.selinux=permissive/g' "$(VENDOR_BOOT_PATCH_DIR)/bootconfig"; \
+		grep -q "androidboot.selinux=permissive" "$(VENDOR_BOOT_PATCH_DIR)/bootconfig" || echo "androidboot.selinux=permissive" >> "$(VENDOR_BOOT_PATCH_DIR)/bootconfig"; \
+	fi
 	@if [ -f "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk/recovery.cpio" ]; then \
 		cp -f "$(recovery_uncompressed_ramdisk)" "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk/recovery.cpio"; \
 	else \
 		cp -f "$(recovery_uncompressed_ramdisk)" "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk_recovery.cpio"; \
 	fi
-	@cd "$(VENDOR_BOOT_PATCH_DIR)" && "$(FOX_MAGISKBOOT)" repack stock.img new_vendor_boot.img
+	@cd "$(VENDOR_BOOT_PATCH_DIR)" && PATCHVBMETAFLAG=true "$(MAGISKBOOT)" repack stock.img new_vendor_boot.img
 	@cp -f "$(VENDOR_BOOT_PATCH_DIR)/new_vendor_boot.img" "$@"
 	$(call assert-max-image-size,$@,$(BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE))
 	$(AVBTOOL) erase_footer --image $@ >/dev/null 2>&1 || true
@@ -50,6 +62,7 @@ $(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_
 
 # Darth9 - vendor_boot
 ifneq ($(NOT_ORANGEFOX),1)
+ifneq ($(wildcard $(FOX_VENDOR)),)
 	$(BASH) $(FOX_VENDOR) FOX_VENDOR_CMD="Fox_After_Recovery_Image" \
   	FOX_MANIFEST_VER="14.1" \
   	BOARD_BOOT_HEADER_VERSION="$(BOARD_BOOT_HEADER_VERSION)" \
@@ -77,6 +90,7 @@ ifneq ($(NOT_ORANGEFOX),1)
   	BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT=$(BOARD_MOVE_RECOVERY_RESOURCES_TO_VENDOR_BOOT) \
   	ORANGEFOX_CALLING_CARD="1.0" \
   	recovery_ramdisk="$(recovery_ramdisk)"
+endif
 endif
 # Darth9 - vendor_boot
 endif
