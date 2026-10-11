@@ -37,9 +37,7 @@ ifeq ($(MAGISKBOOT),)
     endif
 endif
 
-$(recovery_uncompressed_ramdisk): recovery
-
-$(INSTALLED_VENDOR_BOOTIMAGE_TARGET): recovery $(recovery_uncompressed_ramdisk) $(VENDOR_BOOT_STOCK) $(AVBTOOL)
+$(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_BOOT_STOCK) $(AVBTOOL)
 	$(call pretty,"Target vendor_boot image: $@ (patched stock)")
 	@if [ ! -f "$(VENDOR_BOOT_STOCK)" ]; then \
 		echo "error: missing stock vendor_boot at $(VENDOR_BOOT_STOCK)"; \
