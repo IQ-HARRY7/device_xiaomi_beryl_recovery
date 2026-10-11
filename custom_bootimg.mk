@@ -58,7 +58,7 @@ $(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_
 	$(AVBTOOL) erase_footer --image $@ >/dev/null 2>&1 || true
 	$(AVBTOOL) add_hash_footer \
 		--image $@ \
-		$(call get-partition-size-argument,$(BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE)) \
+		--partition_size $(BOARD_VENDOR_BOOTIMAGE_PARTITION_SIZE) \
 		--partition_name vendor_boot $(INTERNAL_AVB_VENDOR_BOOT_SIGNING_ARGS) \
 		$(BOARD_AVB_VENDOR_BOOT_ADD_HASH_FOOTER_ARGS)
 
