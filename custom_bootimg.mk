@@ -21,8 +21,16 @@ endif
 ifdef BUILDING_VENDOR_BOOT_IMAGE
 VENDOR_BOOT_STOCK ?= $(DEVICE_PATH)/prebuilt/vendor_boot.img
 VENDOR_BOOT_PATCH_DIR := $(PRODUCT_OUT)/vendor_boot_patch
-MAGISKBOOT ?= $(PWD)/external/magisk-prebuilt/prebuilt/magiskboot_arm
-ifeq ($(wildcard $(MAGISKBOOT)),)
+# Determine host architecture binary for magiskboot
+HOST_ARCH_SUFFIX := $(if $(findstring aarch64,$(shell uname -m)),arm64,$(if $(findstring arm,$(shell uname -m)),arm,$(if $(findstring x86_64,$(shell uname -m)),x86_64,x86)))
+MAGISKBOOT := $(wildcard $(PWD)/external/magisk-prebuilt/prebuilt/magiskboot_$(HOST_ARCH_SUFFIX))
+ifeq ($(MAGISKBOOT),)
+    MAGISKBOOT := $(wildcard $(PWD)/external/magisk-prebuilt/prebuilt/magiskboot_x86_64)
+endif
+ifeq ($(MAGISKBOOT),)
+    MAGISKBOOT := $(wildcard $(PWD)/external/magisk-prebuilt/prebuilt/magiskboot_x86)
+endif
+ifeq ($(MAGISKBOOT),)
     MAGISKBOOT := $(PWD)/vendor/recovery/tools/magiskboot
     ifeq ($(wildcard $(MAGISKBOOT)),)
         MAGISKBOOT := magiskboot
