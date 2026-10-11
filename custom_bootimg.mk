@@ -50,7 +50,7 @@ $(INSTALLED_VENDOR_BOOTIMAGE_TARGET): $(recovery_uncompressed_ramdisk) $(VENDOR_
 	@rm -rf "$(VENDOR_BOOT_PATCH_DIR)"
 	@mkdir -p "$(VENDOR_BOOT_PATCH_DIR)"
 	@cp -f "$(VENDOR_BOOT_STOCK)" "$(VENDOR_BOOT_PATCH_DIR)/stock.img"
-	@cd "$(VENDOR_BOOT_PATCH_DIR)" && "$(MAGISKBOOT)" unpack -n stock.img
+	@cd "$(VENDOR_BOOT_PATCH_DIR)" && "$(MAGISKBOOT)" unpack stock.img
 	@if [ -f "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk/recovery.cpio" ]; then \
 		cp -f "$(recovery_uncompressed_ramdisk)" "$(VENDOR_BOOT_PATCH_DIR)/vendor_ramdisk/recovery.cpio"; \
 	else \
