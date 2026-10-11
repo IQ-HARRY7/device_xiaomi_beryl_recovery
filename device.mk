@@ -56,7 +56,6 @@ PRODUCT_PACKAGES += \
 PRODUCT_PACKAGES += \
     recovery \
     init \
-    adbd \
     init.environ.rc \
     vold.recovery \
     vold_prepare_subdirs.recovery \
