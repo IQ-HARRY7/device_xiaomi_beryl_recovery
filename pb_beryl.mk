@@ -9,11 +9,12 @@
 $(call inherit-product, $(SRC_TARGET_DIR)/product/core_64_bit.mk)
 $(call inherit-product, $(SRC_TARGET_DIR)/product/base.mk)
 
-# Enable updating of APEXes
-$(call inherit-product, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
+# Enable updating of APEXes (if present in build tree)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/updatable_apex.mk)
 
-# Installs gsi keys into ramdisk, to boot a developer GSI with verified boot.
-$(call inherit-product, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
+# Installs gsi keys into ramdisk, to boot a developer GSI with verified boot (if present in build tree)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/gsi_keys.mk)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
 
 # Inherit from beryl device
 $(call inherit-product, device/xiaomi/beryl/device.mk)

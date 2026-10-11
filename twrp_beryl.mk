@@ -15,8 +15,8 @@ $(call inherit-product, vendor/twrp/config/common.mk)
 # Inherit from beryl device
 $(call inherit-product, device/xiaomi/beryl/device.mk)
 
-# Configure emulated_storage.mk
-$(call inherit-product, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
+# Configure emulated_storage.mk (if present)
+$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/emulated_storage.mk)
 
 # Inherit PBRP common stuff if exists
 $(call inherit-product-if-exists, vendor/pb/config/common.mk)
