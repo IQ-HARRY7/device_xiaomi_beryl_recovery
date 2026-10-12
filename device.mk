@@ -88,9 +88,8 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/recovery/root/first_stage_ramdisk/fstab.mt6855:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.mt6855 \
     $(LOCAL_PATH)/recovery/root/first_stage_ramdisk/fstab.emmc:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/fstab.emmc
 
-# Copy stock vendor_ramdisk essentials to ramdisk00 — sepolicy, context files, snapuserd, init
+# Copy stock vendor_ramdisk essentials to ramdisk00 — sepolicy, context files, init
 PRODUCT_COPY_FILES += \
-    $(LOCAL_PATH)/vendor_ramdisk/first_stage_ramdisk/system/bin/snapuserd:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/first_stage_ramdisk/system/bin/snapuserd \
     $(LOCAL_PATH)/vendor_ramdisk/system/bin/mtk_plpath_utils:$(TARGET_COPY_OUT_RECOVERY)/root/system/bin/mtk_plpath_utils \
     $(LOCAL_PATH)/vendor_ramdisk/system/bin/init:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/system/bin/init \
     $(LOCAL_PATH)/vendor_ramdisk/init:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/init \
@@ -111,10 +110,6 @@ PRODUCT_COPY_FILES += \
     $(LOCAL_PATH)/vendor_ramdisk/product_file_contexts:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/product_file_contexts \
     $(LOCAL_PATH)/vendor_ramdisk/product_property_contexts:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/product_property_contexts \
     $(LOCAL_PATH)/vendor_ramdisk/product_service_contexts:$(TARGET_COPY_OUT_VENDOR_RAMDISK)/product_service_contexts
-
-# Timezone data for Bionic libc
-PRODUCT_COPY_FILES += \
-    system/timezone/output_data/iana/tzdata:$(TARGET_COPY_OUT_RECOVERY)/root/system/usr/share/zoneinfo/tzdata
 
 
 
