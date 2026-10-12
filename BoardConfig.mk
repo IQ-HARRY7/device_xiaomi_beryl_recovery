@@ -83,6 +83,7 @@ BOARD_MKBOOTIMG_ARGS += \
     --dtb_offset $(BOARD_DTB_OFFSET)
 
 BOARD_INCLUDE_DTB_IN_BOOTIMG := true
+BOARD_PREBUILT_DTBIMAGE_DIR := $(DEVICE_PATH)/prebuilt/dtb
 
 # SELinux Permissive (Debugging Only)
 BOARD_BOOTCONFIG                               += androidboot.selinux=permissive
