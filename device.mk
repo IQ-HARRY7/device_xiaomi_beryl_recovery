@@ -9,15 +9,10 @@ LOCAL_PATH := device/xiaomi/beryl
 
 # Configure Virtual A/B
 $(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/launch_with_vendor_ramdisk.mk)
-$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression_with_xor.mk)
-$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota/compression.mk)
-$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/virtual_ab_ota.mk)
 
-# Enable developer GSI keys
-$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/developer_gsi_keys.mk)
-
-# Configure generic ramdisk
-$(call inherit-product-if-exists, $(SRC_TARGET_DIR)/product/generic_ramdisk.mk)
+PRODUCT_USE_VIRTUAL_AB := true
+PRODUCT_VIRTUAL_AB_OTA := true
+PRODUCT_VIRTUAL_AB_COMPRESSION := true
 
 # Hidl Service
 PRODUCT_ENFORCE_VINTF_MANIFEST := true
@@ -49,59 +44,34 @@ AB_OTA_POSTINSTALL_CONFIG += \
 # Boot
 PRODUCT_PACKAGES += \
     android.hardware.boot-V1-ndk \
-    android.hardware.boot@1.0 \
-    android.hardware.boot@1.1 \
-    android.hardware.boot@1.2 \
-    android.hardware.boot@1.2-impl \
     libmtk_bsg
 
 # Recovery basics
-
 PRODUCT_PACKAGES += \
     recovery \
     init \
-    init.environ.rc \
-    vold.recovery \
-    vold_prepare_subdirs.recovery \
-    wait_for_keymaster.recovery
+    init.environ.rc
 
 # Fastboot
 PRODUCT_PACKAGES += \
     android.hardware.fastboot-V1-ndk \
-    android.hardware.fastboot@1.0 \
-    android.hardware.fastboot@1.1 \
     fastbootd
 
-# Keymaster
+# Keymaster & Keymint
 PRODUCT_PACKAGES += \
-    android.hardware.keymaster@4.1
-
-# Keymint
-PRODUCT_PACKAGES += \
+    android.hardware.keymaster@4.1 \
     android.hardware.security.keymint \
     android.hardware.security.secureclock \
     android.hardware.security.sharedsecret
 
 PRODUCT_PACKAGES += \
-    e2fsck.vendor_ramdisk \
-    fsck.f2fs.vendor_ramdisk \
-    resize2fs.vendor_ramdisk \
-    tune2fs.vendor_ramdisk
-
-PRODUCT_PACKAGES += \
     fstab.mt6855.vendor_ramdisk
-
-# Drm
-PRODUCT_PACKAGES += \
-    android.hardware.drm@1.4
 
 # Additional Target Libraries
 TARGET_RECOVERY_DEVICE_MODULES += \
     android.hardware.keymaster@4.1 \
     android.hardware.keymaster-V4-ndk.so \
     libion \
-    android.hardware.boot@1.0 \
-    android.hardware.boot@1.1 \
     android.hardware.boot-V1-ndk \
     libsysutils \
     libvintf
@@ -109,8 +79,6 @@ TARGET_RECOVERY_DEVICE_MODULES += \
 TW_RECOVERY_ADDITIONAL_RELINK_LIBRARY_FILES += \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.keymaster@4.1.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libion.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.0.so \
-    $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot@1.1.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/android.hardware.boot-V1-ndk.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libsysutils.so \
     $(TARGET_OUT_SHARED_LIBRARIES)/libvintf.so

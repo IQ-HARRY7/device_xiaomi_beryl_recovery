@@ -202,15 +202,22 @@ TW_INCLUDE_REPACKTOOLS := false
 TW_EXCLUDE_APEX := true
 TW_EXCLUDE_PYTHON := true
 TW_EXCLUDE_TWRPAPP := true
+TW_EXCLUDE_NANO := true
+TW_EXCLUDE_BASH := true
+TW_EXCLUDE_ZIP := true
+TW_EXCLUDE_TZDATA := true
+TW_EXCLUDE_ENCRYPTED_BACKUPS := true
+TW_NO_EXFAT_FUSE := true
+TW_NO_USB_STORAGE := true
 TARGET_USES_MKE2FS := true
 TW_INCLUDE_NTFS_3G := false
 TW_USE_TOOLBOX := true
 TW_INCLUDE_RESETPROP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 
-# Debug flags
-TWRP_INCLUDE_LOGCAT := true
-TARGET_USES_LOGD := true
+# Debug flags (disabled to reduce recovery image size)
+TWRP_INCLUDE_LOGCAT := false
+TARGET_USES_LOGD := false
 
 # Vendor_Boot
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
@@ -229,7 +236,7 @@ TW_CUSTOM_BATTERY_PATH := "/sys/class/power_supply/battery"
 TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone1/temp"
 
 # Haptics
-TW_NO_HAPTICS := false
+TW_NO_HAPTICS := true
 
 # Flashlight / Torch
 PB_TORCH_PATH := "/sys/class/leds/flashlight"
@@ -237,13 +244,10 @@ PB_TORCH_MAX_BRIGHTNESS := 1
 
 # PitchBlack Recovery Project (PBRP) Configuration
 PB_DEVICE_RATIO := "20:9"
+PB_ENGLISH := true
 PB_DISABLE_DEFAULT_DM_VERITY := true
 PB_DISABLE_DEFAULT_TREBLE_COMP := true
 MAINTAINER := IQ_HARRY_07
 TW_DEVICE_VERSION := beryl | IQ_HARRY_07
 
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
-
-TW_LOAD_VENDOR_MODULES := "fts_touch_i2c.ko lct_tp.ko xiaomi_tp.ko xiaomi_fp.ko adsp.ko nfc_i2c.ko mtk_battery_manager.ko mt6375-battery.ko auth_battery.ko charger_class.ko mtk_charger_framework.ko regulator-vibrator.ko flashlight.ko lm3644.ko"
-
-TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
