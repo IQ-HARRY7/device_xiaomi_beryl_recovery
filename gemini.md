@@ -73,10 +73,9 @@ PBRP is a fork of TWRP. Unlike OrangeFox (which relies heavily on hundreds of pr
     export ALLOW_MISSING_DEPENDENCIES=true
     ```
 
-- **`custom_bootimg.mk`**:
-  - Updated header/license to PBRP / Apache-2.0.
-  - Replaced hardcoded `FOX_MAGISKBOOT` with flexible multi-path `MAGISKBOOT` detection (`external/magisk-prebuilt`, `vendor/recovery/tools/magiskboot`, system `$PATH`).
-  - Removed OrangeFox post-processing hook `Fox_After_Recovery_Image` while preserving stock `vendor_boot` Header v4 repacking and AVB footer signing.
+- **Vendor Boot Generation**:
+  - Uses standard PBRP / AOSP build rules (`build/make/core/Makefile` and `vendor/utils/build/tasks/pbrp.mk`).
+  - Native `mkbootimg` and `avbtool` packaging of recovery ramdisk fragment into `vendor_boot.img`.
 
 - **`twrp_beryl.mk`**:
   - Cleaned duplicate `PRODUCT_NAME` assignment.

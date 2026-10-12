@@ -71,18 +71,18 @@ BOARD_DTB_SIZE                := 266395
 TARGET_KERNEL_ARCH            := arm64
 TARGET_KERNEL_HEADER_ARCH     := arm64
 BOARD_KERNEL_IMAGE_NAME       := kernel
-BOARD_VENDOR_CMDLINE          := "bootopt=64S3,32N2,64N2 bootconfig"
+BOARD_KERNEL_CMDLINE          := bootopt=64S3,32N2,64N2 bootconfig
+BOARD_VENDOR_CMDLINE          := bootopt=64S3,32N2,64N2 bootconfig
 
-# Header v4
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
-BOARD_MKBOOTIMG_ARGS += --pagesize $(BOARD_PAGE_SIZE)
-BOARD_MKBOOTIMG_ARGS += --vendor_cmdline $(BOARD_VENDOR_CMDLINE)
-BOARD_MKBOOTIMG_ARGS += --base $(BOARD_KERNEL_BASE)
-BOARD_MKBOOTIMG_ARGS += --kernel_offset $(BOARD_KERNEL_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_TAGS_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --dtb_offset $(BOARD_DTB_OFFSET)
-BOARD_MKBOOTIMG_ARGS += --dtb $(TARGET_PREBUILT_DTB)
+# mkbootimg args for MTK load addresses
+BOARD_MKBOOTIMG_ARGS += \
+    --header_version $(BOARD_BOOT_HEADER_VERSION) \
+    --kernel_offset $(BOARD_KERNEL_OFFSET) \
+    --ramdisk_offset $(BOARD_RAMDISK_OFFSET) \
+    --tags_offset $(BOARD_TAGS_OFFSET) \
+    --dtb_offset $(BOARD_DTB_OFFSET)
+
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 
 # SELinux Permissive (Debugging Only)
 BOARD_BOOTCONFIG                               += androidboot.selinux=permissive
@@ -152,9 +152,6 @@ BOARD_RECOVERY_SEPOLICY_DIRS += $(DEVICE_PATH)/sepolicy/recovery
 # Properties
 TARGET_SYSTEM_PROP += $(DEVICE_PATH)/system.prop
 
-# Flag to specify custom_bootimg.mk for Header v4 repacking
-BOARD_CUSTOM_BOOTIMG_MK := $(DEVICE_PATH)/custom_bootimg.mk
-
 # Hack: prevent anti rollback
 PLATFORM_SECURITY_PATCH := 2099-12-31
 VENDOR_SECURITY_PATCH := $(PLATFORM_SECURITY_PATCH)
@@ -218,7 +215,8 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 TWRP_INCLUDE_LOGCAT := false
 TARGET_USES_LOGD := false
 
-# Vendor_Boot
+# Recovery in vendor_boot
+BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
 BOARD_USES_GENERIC_KERNEL_IMAGE := true
