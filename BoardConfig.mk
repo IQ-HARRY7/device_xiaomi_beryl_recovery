@@ -206,10 +206,6 @@ TW_EXCLUDE_NANO := true
 TW_EXCLUDE_BASH := true
 TW_EXCLUDE_ZIP := true
 TW_EXCLUDE_TZDATA := true
-TW_EXCLUDE_ENCRYPTED_BACKUPS := true
-TW_EXCLUDE_APP_MANAGER := true
-
-# TWRP
 TW_NO_EXFAT_FUSE := true
 TW_NO_USB_STORAGE := true
 TARGET_USES_MKE2FS := true
@@ -218,13 +214,9 @@ TW_USE_TOOLBOX := true
 TW_INCLUDE_RESETPROP := true
 TW_EXCLUDE_DEFAULT_USB_INIT := true
 
-# ------------------------
-# Reduce the Final .img size. 
-TW_USE_COMPRESSION := true
-
-# Debug flags 
-TWRP_INCLUDE_LOGCAT := true
-TARGET_USES_LOGD := true
+# Debug flags (disabled to reduce recovery image size)
+TWRP_INCLUDE_LOGCAT := false
+TARGET_USES_LOGD := false
 
 # Vendor_Boot
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
