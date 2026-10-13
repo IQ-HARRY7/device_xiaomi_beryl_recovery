@@ -30,6 +30,7 @@ on:
         options:
         - fox_14.1
         - PBRP
+        - PBRP-TEST
         - master
         - main
       DEVICE_PATH:
