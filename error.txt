@@ -1,0 +1,17 @@
+[ 99% 22358/22360] build out/target/product/beryl/obj/PACKAGING/vendor_ramdisk_fragments_intermediates/recovery.cpio.lz4
+[ 99% 22359/22360] Target vendor_boot image: out/target/product/beryl/vendor_boot.img
+FAILED: out/target/product/beryl/vendor_boot.img
+/bin/bash -c "(out/host/linux-x86/bin/mkbootimg --base 0x00000000 --vendor_cmdline \"bootopt=64S3,32N2,64N2 bootconfig bootconfig\" --vendor_bootconfig out/target/product/beryl/vendor-bootconfig.img --header_version 4 --pagesize 4096 --vendor_cmdline bootopt=64S3,32N2,64N2 bootconfig --base 0x00000000 --kernel_offset 0x40000000 --ramdisk_offset 0x66f00000 --tags_offset 0x47c80000 --dtb_offset 0x41ef8000 --dtb device/xiaomi/beryl/prebuilt/dtb.img --vendor_ramdisk out/target/product/beryl/obj/PACKAGING/vendor_boot_intermediates/vendor_ramdisk.cpio.lz4  --ramdisk_type RECOVERY --ramdisk_name recovery --vendor_ramdisk_fragment out/target/product/beryl/obj/PACKAGING/vendor_ramdisk_fragments_intermediates/recovery.cpio.lz4 --vendor_boot out/target/product/beryl/vendor_boot.img ) && (size=\$(for i in out/target/product/beryl/vendor_boot.img; do stat -c \"%s\" \"\$i\" | tr -d '\\n'; echo +; done; echo 0); total=\$(( \$( echo \"\$size\" ) )); printname=\$(echo -n \"out/target/product/beryl/vendor_boot.img\" | tr \" \" +); maxsize=\$((67108864)); if [ \"\$total\" -gt \"\$maxsize\" ]; then echo \"error: \$printname too large (\$total > \$maxsize)\"; false; elif [ \"\$total\" -gt \$((maxsize - 32768)) ]; then echo \"WARNING: \$printname approaching size limit (\$total now; limit \$maxsize)\"; fi ) && (out/host/linux-x86/bin/avbtool add_hash_footer            --image out/target/product/beryl/vendor_boot.img 	     --partition_size 67108864 	   --partition_name vendor_boot  	   --prop com.android.build.vendor_boot.fingerprint:\$(cat out/target/product/beryl/build_fingerprint.txt) )"
+Traceback (most recent call last):
+  File "internal/stdlib/runpy.py", line 196, in _run_module_as_main
+  File "internal/stdlib/runpy.py", line 86, in _run_code
+  File "/home/runner/work/device_xiaomi_beryl_recovery/device_xiaomi_beryl_recovery/PBRP/pbrp_android-14.0/out/host/linux-x86/bin/mkbootimg/__main__.py", line 12, in <module>
+  File "internal/stdlib/runpy.py", line 196, in _run_module_as_main
+  File "internal/stdlib/runpy.py", line 86, in _run_code
+  File "mkbootimg.py", line 666, in <module>
+  File "mkbootimg.py", line 643, in main
+  File "mkbootimg.py", line 569, in parse_cmdline
+ValueError: Unrecognized arguments: ['bootconfig']
+ninja: build stopped: subcommand failed.
+12:01:45 ninja failed with: exit status 1
+Error: Process completed with exit code 1.
