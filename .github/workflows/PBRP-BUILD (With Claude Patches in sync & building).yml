@@ -1,0 +1,322 @@
+name: PBRP Builder
+
+on:
+  workflow_dispatch:
+    inputs:
+      MANIFEST_BRANCH:
+        description: PBRP manifest branch
+        required: true
+        type: choice
+        default: android-14.0
+        options:
+          - android-14.0
+          - android-12.1
+      DEVICE_TREE_URL:
+        description: Device tree repository URL
+        required: true
+        type: string
+        default: https://github.com/IQ-HARRY7/device_xiaomi_beryl_recovery
+      DEVICE_TREE_BRANCH:
+        description: Device tree branch
+        required: true
+        type: choice
+        default: PBRP
+        options:
+          - master
+          - main
+          - PBRP
+          - PBRP-TEST
+      DEVICE_PATH:
+        description: Device path in the source tree (device/<vendor>/<codename>)
+        required: true
+        type: string
+        default: device/xiaomi/beryl
+      LUNCH_PRODUCT:
+        description: Lunch product (pb_<codename>)
+        required: true
+        type: string
+        default: pb_beryl
+      BUILD_TYPE:
+        description: Build variant
+        required: true
+        type: choice
+        default: eng
+        options:
+          - eng
+          - userdebug
+          - user
+      BUILD_TARGET:
+        description: Build target (mka <target>)
+        required: true
+        type: choice
+        default: pbrp
+        options:
+          - pbrp
+          - recoveryimage
+          - bootimage
+          - vendorbootimage
+      SWAP_SIZE_GB:
+        description: Swap size in GB (0 to disable)
+        required: true
+        type: string
+        default: "16"
+      PUBLISH_RELEASE:
+        description: Publish a GitHub release (otherwise upload a workflow artifact)
+        required: true
+        type: boolean
+        default: true
+      RELEASE_NOTE:
+        description: Extra text for the top of the release notes
+        required: false
+        type: string
+        default: ""
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    name: Build ${{ inputs.LUNCH_PRODUCT }} (${{ inputs.MANIFEST_BRANCH }})
+    runs-on: ubuntu-24.04
+    timeout-minutes: 360
+    defaults:
+      run:
+        shell: bash
+    env:
+      DEBIAN_FRONTEND: noninteractive
+      MANIFEST_BRANCH: ${{ inputs.MANIFEST_BRANCH }}
+      DEVICE_TREE_URL: ${{ inputs.DEVICE_TREE_URL }}
+      DEVICE_TREE_BRANCH: ${{ inputs.DEVICE_TREE_BRANCH }}
+      DEVICE_PATH: ${{ inputs.DEVICE_PATH }}
+      LUNCH_PRODUCT: ${{ inputs.LUNCH_PRODUCT }}
+      BUILD_TYPE: ${{ inputs.BUILD_TYPE }}
+      BUILD_TARGET: ${{ inputs.BUILD_TARGET }}
+      SWAP_SIZE_GB: ${{ inputs.SWAP_SIZE_GB }}
+      RELEASE_NOTE: ${{ inputs.RELEASE_NOTE }}
+
+    steps:
+      - name: Prepare runner
+        run: |
+          set -euo pipefail
+          echo "JOB_START=$(date +%s)" >> "$GITHUB_ENV"
+
+          [[ "$SWAP_SIZE_GB" =~ ^[0-9]+$ ]] || { echo "::error::SWAP_SIZE_GB must be a whole number"; exit 1; }
+          [[ "$LUNCH_PRODUCT" =~ ^[A-Za-z0-9_]+$ ]] || { echo "::error::LUNCH_PRODUCT contains invalid characters"; exit 1; }
+          case "$DEVICE_PATH" in
+            /* | *..*) echo "::error::DEVICE_PATH must be a relative path"; exit 1 ;;
+          esac
+
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /usr/local/.ghcup \
+            /opt/hostedtoolcache /usr/share/swift /usr/local/share/powershell \
+            /usr/local/share/chromium /usr/local/share/boost /opt/az /opt/microsoft \
+            /usr/lib/google-cloud-sdk
+          sudo docker image prune --all --force > /dev/null 2>&1 || true
+
+          sudo swapoff -a
+          sudo rm -f /mnt/swapfile
+
+          free_gb() { df -BG --output=avail "$1" | awk 'NR==2 {gsub(/G/, ""); print $1}'; }
+          dev_of() { stat -c %d "$1"; }
+
+          # Build on the roomiest filesystem; swap goes on the other one when it fits.
+          big="$RUNNER_WORKSPACE"
+          small="$big"
+          if mountpoint -q /mnt && [ "$(dev_of /mnt)" != "$(dev_of "$big")" ]; then
+            small=/mnt
+            if [ "$(free_gb /mnt)" -gt "$(free_gb "$big")" ]; then
+              big=/mnt
+              small="$RUNNER_WORKSPACE"
+            fi
+          fi
+          swap_fs="$small"
+          [ "$(free_gb "$swap_fs")" -ge $((SWAP_SIZE_GB + 2)) ] || swap_fs="$big"
+
+          sudo install -d -o "$(id -u)" -g "$(id -g)" "$big/pbrp"
+          echo "SRC_DIR=$big/pbrp" >> "$GITHUB_ENV"
+
+          if [ "$SWAP_SIZE_GB" -gt 0 ]; then
+            sudo fallocate -l "${SWAP_SIZE_GB}G" "$swap_fs/pbrp.swap"
+            sudo chmod 600 "$swap_fs/pbrp.swap"
+            sudo mkswap "$swap_fs/pbrp.swap" > /dev/null
+            sudo swapon "$swap_fs/pbrp.swap"
+          fi
+
+          swapon --show
+          free -h
+          df -h "$big" "$swap_fs"
+
+      - name: Install build dependencies
+        env:
+          ACTOR_ID: ${{ github.actor_id }}
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends \
+            bc bison build-essential cpio curl flex g++-multilib gcc-multilib git gnupg gperf \
+            lib32ncurses-dev lib32z1-dev libc6-dev-i386 libelf-dev libncurses-dev libssl-dev \
+            libxml2-utils lz4 python-is-python3 python3 rsync unzip xsltproc zip zlib1g-dev
+
+          mkdir -p "$HOME/bin"
+          curl -fsSL --retry 5 --retry-all-errors \
+            https://storage.googleapis.com/git-repo-downloads/repo -o "$HOME/bin/repo"
+          chmod +x "$HOME/bin/repo"
+          echo "$HOME/bin" >> "$GITHUB_PATH"
+
+          git config --global user.name "$GITHUB_ACTOR"
+          git config --global user.email "${ACTOR_ID}+${GITHUB_ACTOR}@users.noreply.github.com"
+          git config --global color.ui true
+
+      # .repo stays intact: PBRP's roomservice.py reads .repo/manifests and may
+      # run repo sync for the device tree's dependency file at lunch time.
+      - name: Sync PBRP source
+        run: |
+          set -euo pipefail
+          export PATH="$HOME/bin:$PATH"
+          cd "$SRC_DIR"
+          t0=$(date +%s)
+
+          repo init -u https://github.com/PitchBlackRecoveryProject/manifest_pb \
+            -b "$MANIFEST_BRANCH" --depth=1
+
+          ok=0
+          for attempt in 1 2 3; do
+            if repo sync -c -j"$(nproc)" --force-sync --no-clone-bundle --no-tags; then
+              ok=1
+              break
+            fi
+            echo "::warning::repo sync failed (attempt $attempt of 3)"
+            sleep $((attempt * 30))
+          done
+          [ "$ok" -eq 1 ] || { echo "::error::repo sync failed"; exit 1; }
+
+          version="$(awk -F'"' '/define PB_MAIN_VERSION/ {print $2; exit}' bootable/recovery/variables.h)"
+          {
+            echo "SYNC_SECONDS=$(( $(date +%s) - t0 ))"
+            echo "MANIFEST_SHA=$(git -C .repo/manifests rev-parse --short=10 HEAD)"
+            echo "RECOVERY_SHA=$(git -C bootable/recovery rev-parse --short=10 HEAD)"
+            echo "PBRP_VERSION=${version:-unknown}"
+          } >> "$GITHUB_ENV"
+          df -h "$SRC_DIR"
+
+      - name: Clone device tree
+        run: |
+          set -euo pipefail
+          cd "$SRC_DIR"
+          if ! git clone --depth=1 --branch "$DEVICE_TREE_BRANCH" "$DEVICE_TREE_URL" "$DEVICE_PATH"; then
+            echo "::error::Cannot clone branch '$DEVICE_TREE_BRANCH' of $DEVICE_TREE_URL"
+            exit 1
+          fi
+          url="${DEVICE_TREE_URL%/}"
+          {
+            echo "DT_URL=${url%.git}"
+            echo "DT_SHA=$(git -C "$DEVICE_PATH" rev-parse HEAD)"
+          } >> "$GITHUB_ENV"
+
+      - name: Build
+        run: |
+          set -o pipefail
+          export PATH="$HOME/bin:$PATH"
+          cd "$SRC_DIR"
+          combo="${LUNCH_PRODUCT}-${BUILD_TYPE}"
+          export ALLOW_MISSING_DEPENDENCIES=true
+
+          set +e
+          source build/envsetup.sh
+          lunch "$combo"
+          rc=$?
+          set -e
+          [ "$rc" -eq 0 ] || { echo "::error::lunch $combo failed"; exit 1; }
+          echo "PRODUCT_OUT=$OUT" >> "$GITHUB_ENV"
+
+          touch "$RUNNER_TEMP/build.start"
+          t0=$(date +%s)
+          mka "$BUILD_TARGET" 2>&1 | tee "$RUNNER_TEMP/build.log"
+          echo "BUILD_SECONDS=$(( $(date +%s) - t0 ))" >> "$GITHUB_ENV"
+
+      - name: Collect outputs and release notes
+        run: |
+          set -euo pipefail
+          rel="$RUNNER_TEMP/release"
+          mkdir -p "$rel"
+          find "$PRODUCT_OUT" -maxdepth 1 -type f \( -name 'PBRP-*.zip' -o -name '*.img' \) \
+            -newer "$RUNNER_TEMP/build.start" -exec cp -t "$rel" {} +
+          [ -n "$(ls -A "$rel")" ] || { echo "::error::No build outputs found in $PRODUCT_OUT"; exit 1; }
+
+          fmt() { printf '%dh %02dm %02ds' $(($1 / 3600)) $(($1 % 3600 / 60)) $(($1 % 60)); }
+          total=$(( $(date +%s) - JOB_START ))
+          built_at="$(date -u '+%Y-%m-%d %H:%M UTC')"
+          codename="${LUNCH_PRODUCT#*_}"
+
+          tag="pbrp-${codename}-$(date -u +%Y%m%d)-${GITHUB_RUN_NUMBER}"
+          if [ "$GITHUB_RUN_ATTEMPT" -gt 1 ]; then tag="${tag}-${GITHUB_RUN_ATTEMPT}"; fi
+
+          files=""
+          for f in "$rel"/*; do
+            files+="| $(basename "$f") | $(du -h "$f" | cut -f1) | \`$(sha256sum "$f" | cut -d' ' -f1)\` |"$'\n'
+          done
+
+          {
+            if [ -n "$RELEASE_NOTE" ]; then printf '%s\n\n' "$RELEASE_NOTE"; fi
+            cat <<EOF
+          ## PBRP ${PBRP_VERSION} for ${codename}
+
+          Unofficial automated build. Test it before relying on it.
+
+          ### Build details
+          | | |
+          |---|---|
+          | Built | ${built_at} |
+          | Build time | $(fmt "$BUILD_SECONDS") |
+          | Sync time | $(fmt "$SYNC_SECONDS") |
+          | Total workflow time | $(fmt "$total") |
+          | Manifest | ${MANIFEST_BRANCH} (\`${MANIFEST_SHA}\`) |
+          | Recovery source | \`${RECOVERY_SHA}\` |
+          | Lunch | \`${LUNCH_PRODUCT}-${BUILD_TYPE}\` |
+          | Target | \`mka ${BUILD_TARGET}\` |
+          | Workflow run | [#${GITHUB_RUN_NUMBER}](${GITHUB_SERVER_URL}/${GITHUB_REPOSITORY}/actions/runs/${GITHUB_RUN_ID}) |
+
+          ### Device tree
+          [${DT_URL}](${DT_URL}/tree/${DEVICE_TREE_BRANCH}), branch \`${DEVICE_TREE_BRANCH}\`, commit [\`${DT_SHA:0:10}\`](${DT_URL}/commit/${DT_SHA})
+
+          ### Files
+          | File | Size | SHA-256 |
+          |---|---|---|
+          ${files}
+          EOF
+          } > "$RUNNER_TEMP/notes.md"
+
+          {
+            echo "CODENAME=$codename"
+            echo "RELEASE_TAG=$tag"
+            echo "RELEASE_TITLE=PBRP ${PBRP_VERSION} | ${codename} | ${built_at}"
+          } >> "$GITHUB_ENV"
+          cat "$RUNNER_TEMP/notes.md" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Publish release
+        if: ${{ inputs.PUBLISH_RELEASE }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          gh release create "$RELEASE_TAG" "$RUNNER_TEMP"/release/* \
+            --title "$RELEASE_TITLE" \
+            --notes-file "$RUNNER_TEMP/notes.md" \
+            --target "$GITHUB_SHA"
+
+      - name: Upload build output
+        if: ${{ !inputs.PUBLISH_RELEASE }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: pbrp-${{ env.CODENAME }}-${{ github.run_number }}
+          path: ${{ runner.temp }}/release/*
+          if-no-files-found: error
+
+      - name: Upload build log
+        if: ${{ always() }}
+        uses: actions/upload-artifact@v7
+        with:
+          name: build-log-${{ github.run_number }}
+          path: ${{ runner.temp }}/build.log
+          if-no-files-found: ignore
+          retention-days: 7
