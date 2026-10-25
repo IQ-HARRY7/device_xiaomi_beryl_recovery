@@ -26,6 +26,7 @@ on:
           - main
           - PBRP
           - PBRP-TEST
+          - TEST
       DEVICE_PATH:
         description: Device path in the source tree (device/<vendor>/<codename>)
         required: true
