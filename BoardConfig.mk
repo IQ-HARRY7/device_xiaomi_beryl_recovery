@@ -56,7 +56,7 @@ TARGET_NO_BOOTLOADER := true
 # Display
 TARGET_SCREEN_DENSITY := 480
 
-# Kernel
+# ------------------ Kernel [took from real device]-------
 TARGET_NO_RECOVERY            := true
 BOARD_KERNEL_SEPARATED_DTBO   := true
 BOARD_BOOT_HEADER_VERSION     := 4
@@ -97,7 +97,7 @@ TARGET_PREBUILT_KERNEL := $(DEVICE_PATH)/prebuilt/kernel
 TARGET_PREBUILT_DTB := $(DEVICE_PATH)/prebuilt/dtb.img
 endif
 
-# Partitions
+# ---------- Partitions [Took from real Device]--------
 BOARD_FLASH_BLOCK_SIZE := 262144
 BOARD_BOOTIMAGE_PARTITION_SIZE := 134217728
 BOARD_INIT_BOOT_IMAGE_PARTITION_SIZE := 8388608
@@ -120,6 +120,7 @@ BOARD_XIAOMI_DYNAMIC_PARTITIONS_PARTITION_LIST := \
     product \
     odm_dlkm \
     mi_ext
+
 BOARD_XIAOMI_DYNAMIC_PARTITIONS_SIZE := 9116319744
 
 # Workaround for error copying vendor files to recovery ramdisk
@@ -187,7 +188,8 @@ BOARD_USES_METADATA_PARTITION := $(TW_INCLUDE_CRYPTO)
 TW_INCLUDE_FBE_METADATA_DECRYPT := $(TW_INCLUDE_CRYPTO)
 TW_USE_FSCRYPT_POLICY := 2
 
-# TWRP Configuration
+# ---------------TWRP Configuration---------------
+# 
 RECOVERY_SDCARD_ON_DATA := true
 TW_FRAMERATE := 60
 TW_THEME := portrait_hdpi
@@ -214,7 +216,8 @@ TW_EXCLUDE_DEFAULT_USB_INIT := true
 TWRP_INCLUDE_LOGCAT := true
 TARGET_USES_LOGD := true
 
-# Recovery in vendor_boot
+#------------------ Recovery in vendor_boot ----------------
+# 
 BOARD_USES_RECOVERY_AS_BOOT := false
 BOARD_MOVE_GSI_AVB_KEYS_TO_VENDOR_BOOT := true
 BOARD_EXCLUDE_KERNEL_FROM_RECOVERY_IMAGE := true
@@ -247,3 +250,9 @@ MAINTAINER := IQ_HARRY_07
 TW_DEVICE_VERSION := beryl | IQ_HARRY_07
 
 TW_USE_SERIALNO_PROPERTY_FOR_DEVICE_ID := true
+
+#------------------ load Kernel Modules (insmod)----------------
+# in case features that need kernel drivers aren't working (such as Touch)
+TW_LOAD_VENDOR_MODULES := "fts_touch_i2c.ko lct_tp.ko xiaomi_tp.ko xiaomi_fp.ko adsp.ko nfc_i2c.ko mtk_battery_manager.ko mt6375-battery.ko auth_battery.ko charger_class.ko mtk_charger_framework.ko regulator-vibrator.ko flashlight.ko lm3644.ko"
+
+TW_LOAD_VENDOR_MODULES_EXCLUDE_GKI := true
