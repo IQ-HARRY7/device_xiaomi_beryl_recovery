@@ -238,7 +238,7 @@ TW_CUSTOM_CPU_TEMP_PATH := "/sys/class/thermal/thermal_zone1/temp"
 TW_NO_HAPTICS := true
 
 # Flashlight / Torch
-PB_TORCH_PATH := "/sys/class/leds/flashlight"
+PB_TORCH_PATH := "/tmp/flashlight"
 PB_TORCH_MAX_BRIGHTNESS := 1
 
 # PitchBlack Recovery Project (PBRP) Configuration
